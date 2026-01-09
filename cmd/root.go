@@ -6,12 +6,16 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/mabou-dev/go-deps/pkg/config"
+	"github.com/mabou-dev/go-deps/pkg/logger"
 )
 
 var (
 	cfgFile string
 	path    string
 	verbose bool
+	log     logger.Logger
 )
 
 func RootCmd() *cobra.Command {
@@ -20,14 +24,22 @@ func RootCmd() *cobra.Command {
 		Short: "A Go dependency manager",
 		Long: `go-deps is a CLI application for managing Go dependencies.
 It helps you track and manage project dependencies efficiently`,
-		Run: func(cmd *cobra.Command, args []string) {
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			fmt.Println("Welcome to go-deps!")
 			fmt.Printf("Config file: %s\n", viper.ConfigFileUsed())
+
+			cfg, err := config.LoadConfig()
+			if err != nil {
+				fmt.Fprintln(os.Stderr, "Error loading config:", err)
+				os.Exit(1)
+			}
+			log = logger.NewLogger(cfg.App.Debug)
 		},
 	}
 
 	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is config/config.json)")
 	cmd.PersistentFlags().BoolVar(&verbose, "verbose", false, "enable verbose output")
+	viper.BindPFlag("app.debug", cmd.PersistentFlags().Lookup("verbose"))
 	cmd.PersistentFlags().StringVar(&path, "path", ".", "path of the project")
 
 	cmd.AddCommand(ListCmd())
@@ -55,7 +67,7 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		viper.AddConfigPath(".")
-		viper.SetConfigName("config/config")
+		viper.SetConfigName("config")
 	}
 
 	viper.SetConfigType("json")

@@ -31,5 +31,6 @@ You can specify the path to scan and the output folder for fetched dependencies.
 }
 
 func runFetch() error {
+	log.Debug("method runFetch is not implemented")
 	panic("not implemented")
 }

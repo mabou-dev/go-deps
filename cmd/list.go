@@ -25,5 +25,6 @@ You can specify the path to scan.`,
 }
 
 func runList() error {
+	log.Debug("method runList is not implemented")
 	panic("not implemented")
 }
