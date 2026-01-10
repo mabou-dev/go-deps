@@ -1,0 +1,43 @@
+# Binaries for programs and plugins
+/bin/
+/build/
+/out/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Output of the go coverage tool
+coverage.out
+
+# Vendor directory (optional to commit)
+/vendor/
+
+# Godeps folder
+Godeps/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+
+# Logs
+*.log
+
+# Temporary and object files
+*.obj
+
+# Misc
+*.swp
+*~
