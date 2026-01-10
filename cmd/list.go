@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -25,6 +26,7 @@ You can specify the path to scan.`,
 }
 
 func runList() error {
-	log.Debug("method runList is not implemented")
-	panic("not implemented")
+	err := errors.New("method runList is not implemented")
+	log.Error(err.Error())
+	return err
 }

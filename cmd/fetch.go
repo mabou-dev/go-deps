@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -31,6 +32,7 @@ You can specify the path to scan and the output folder for fetched dependencies.
 }
 
 func runFetch() error {
-	log.Debug("method runFetch is not implemented")
-	panic("not implemented")
+	err := errors.New("method runFetch is not implemented")
+	log.Error(err.Error())
+	return err
 }

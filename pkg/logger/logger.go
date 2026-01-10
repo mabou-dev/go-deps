@@ -31,6 +31,8 @@ func NewLogger(debug bool) Logger {
 		config.Level = zap.NewAtomicLevelAt(zapcore.InfoLevel)
 	}
 
+	config.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout("20060102T150405")
+
 	zapLogger, err := config.Build()
 	if err != nil {
 		fmt.Println("Error creating zap logger:", err)
