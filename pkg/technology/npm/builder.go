@@ -9,12 +9,11 @@ import (
 )
 
 type NpmTreeBuilder struct {
-	Registry model.Registry
-
-	Logger logger.Logger
+	Registry *NpmRegistry
+	Logger   logger.Logger
 }
 
-func NewNpmTreeBuilder(logger logger.Logger, registry model.Registry) *NpmTreeBuilder {
+func NewNpmTreeBuilder(logger logger.Logger, registry *NpmRegistry) *NpmTreeBuilder {
 	return &NpmTreeBuilder{
 		Registry: registry,
 		Logger:   logger,
