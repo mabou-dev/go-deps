@@ -2,5 +2,13 @@
   "app": {
     "name": "go-deps",
     "debug": false
-  }
+  },
+  "technical": [
+    {
+      "npm": {
+        "enabled": true,
+        "registry_url": "https://registry.npmjs.org/"
+      }
+    }
+  ]
 }

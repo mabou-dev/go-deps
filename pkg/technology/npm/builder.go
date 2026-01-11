@@ -1,7 +1,6 @@
 package npm
 
 import (
-	"errors"
 	"os"
 	"path/filepath"
 
@@ -9,17 +8,20 @@ import (
 	"github.com/mabou-dev/go-deps/pkg/model"
 )
 
-type NpmBuilder struct {
+type NpmTreeBuilder struct {
 	Registry model.Registry
 
 	Logger logger.Logger
 }
 
-func NewNpmBuilder() *NpmBuilder {
-	return &NpmBuilder{}
+func NewNpmTreeBuilder(logger logger.Logger, registry model.Registry) *NpmTreeBuilder {
+	return &NpmTreeBuilder{
+		Registry: registry,
+		Logger:   logger,
+	}
 }
 
-func (n *NpmBuilder) CanHandle(projectPath string) bool {
+func (n *NpmTreeBuilder) CanHandle(projectPath string) bool {
 	packageJsonPath := filepath.Join(projectPath, PACKAGE_LOCK_FILE)
 	if _, err := os.Stat(packageJsonPath); err == nil {
 		return true
@@ -27,22 +29,32 @@ func (n *NpmBuilder) CanHandle(projectPath string) bool {
 	return false
 }
 
-func (n *NpmBuilder) GetName() string {
+func (n *NpmTreeBuilder) GetName() string {
 	return NAME
 }
 
-func (n *NpmBuilder) BuildTree(projectPath string) (*model.NodeDependency, error) {
-	// Implementation for building the dependency tree from package.json and package-lock.json
-	//return &model.NodeDependency{
-	//	Name:    "example-package",
-	//	Version: "1.0.0",
-	//	URLs:    []string{"https://registry.npmjs.org/example-package/-/example-package-1.0.0.tgz"},
-	//}, nil
-	err := errors.New("NpmBuilder BuildTree not implemented")
-	n.Logger.Error(err.Error())
-	return nil, err
+func (n *NpmTreeBuilder) BuildTree(projectPath string) (*model.NodeDependency, error) {
+	filename := filepath.Join(projectPath, PACKAGE_LOCK_FILE)
+	tree := n.buildTreeFromLockFile(filename)
+	return tree, nil
 }
 
-func (n *NpmBuilder) DownloadPackage(pkg *model.NodeDependency, output string) error {
+func (n *NpmTreeBuilder) buildTreeFromLockFile(filename string) *model.NodeDependency {
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		n.Logger.Error("package-lock.json not found at path: " + filename)
+		return &model.NodeDependency{}
+	}
+
+	lockJson, err := ParsePackageLockJSON(filename)
+	if err != nil {
+		n.Logger.Error("Failed to parse package-lock.json: " + err.Error())
+		return &model.NodeDependency{}
+	}
+
+	tree := PackageLockJSONToNodeDependency(lockJson)
+	return tree
+}
+
+func (n *NpmTreeBuilder) DownloadPackage(pkg *model.NodeDependency, output string) error {
 	return n.Registry.DownloadPackage(pkg, output)
 }

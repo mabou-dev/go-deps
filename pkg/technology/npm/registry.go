@@ -13,9 +13,10 @@ type NpmRegistry struct {
 	Logger logger.Logger
 }
 
-func NewNpmRegistry(baseURL string) *NpmRegistry {
+func NewNpmRegistry(logger logger.Logger, baseURL string) *NpmRegistry {
 	return &NpmRegistry{
 		BaseURL: baseURL,
+		Logger:  logger,
 	}
 }
 

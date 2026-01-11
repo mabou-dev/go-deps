@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/mabou-dev/go-deps/pkg/adapter"
 	"github.com/mabou-dev/go-deps/pkg/config"
 	"github.com/mabou-dev/go-deps/pkg/logger"
 )
@@ -34,6 +35,7 @@ It helps you track and manage project dependencies efficiently`,
 				os.Exit(1)
 			}
 			log = logger.NewLogger(cfg.App.Debug)
+			adapter.Init(log, cfg.Technical)
 		},
 	}
 

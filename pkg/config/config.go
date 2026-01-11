@@ -4,11 +4,14 @@ import (
 	"fmt"
 
 	"github.com/spf13/viper"
+
+	"github.com/mabou-dev/go-deps/pkg/technology/npm"
 )
 
 // Config holds the application configuration
 type Config struct {
-	App AppConfig `mapstructure:"app"`
+	App       AppConfig                  `mapstructure:"app"`
+	Technical map[string]TechnicalConfig `mapstructure:"technical"`
 }
 
 // AppConfig holds application-specific settings
@@ -17,12 +20,24 @@ type AppConfig struct {
 	Debug bool   `mapstructure:"debug"`
 }
 
+type TechnicalConfig struct {
+	Enabled     bool   `mapstructure:"enabled"`
+	RegistryURL string `mapstructure:"registry_url"`
+}
+
 // DefaultConfig returns a default configuration structure
 func DefaultConfig() *Config {
 	return &Config{
 		App: AppConfig{
 			Name:  "go-deps",
 			Debug: false,
+		},
+		Technical: map[string]TechnicalConfig{
+			npm.NAME: {
+				Enabled:     true,
+				RegistryURL: "https://registry.npmjs.org/",
+			},
+			// Add other technologies with their default configs here
 		},
 	}
 }
