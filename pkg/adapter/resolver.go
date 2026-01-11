@@ -6,6 +6,7 @@ import (
 	"github.com/mabou-dev/go-deps/pkg/config"
 	"github.com/mabou-dev/go-deps/pkg/logger"
 	"github.com/mabou-dev/go-deps/pkg/model"
+	"github.com/mabou-dev/go-deps/pkg/technology/golang"
 	"github.com/mabou-dev/go-deps/pkg/technology/npm"
 )
 
@@ -37,4 +38,8 @@ func Init(logger logger.Logger, cfg map[string]config.TechnicalConfig) {
 	var _ Adapter = (*npm.NpmTreeBuilder)(nil)
 	NpmRegistry := npm.NewNpmRegistry(logger, cfg[npm.NAME].RegistryURL)
 	RegisterAdapter(npm.NewNpmTreeBuilder(logger, NpmRegistry))
+
+	var _ Adapter = (*golang.GolangTreeBuilder)(nil)
+	GolangRegistry := golang.NewGolangRegistry(logger, cfg[golang.NAME].RegistryURL)
+	RegisterAdapter(golang.NewGolangTreeBuilder(logger, GolangRegistry))
 }
