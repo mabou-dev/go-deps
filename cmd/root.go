@@ -8,8 +8,8 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/mabou-dev/go-deps/pkg/adapter"
-	"github.com/mabou-dev/go-deps/pkg/config"
-	"github.com/mabou-dev/go-deps/pkg/logger"
+	"github.com/mabou-dev/go-deps/pkg/utils/config"
+	"github.com/mabou-dev/go-deps/pkg/utils/logger"
 )
 
 var (

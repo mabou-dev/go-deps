@@ -6,8 +6,8 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/mabou-dev/go-deps/pkg/logger"
-	"github.com/mabou-dev/go-deps/pkg/model"
+	"github.com/mabou-dev/go-deps/pkg/core"
+	"github.com/mabou-dev/go-deps/pkg/utils/logger"
 )
 
 type GolangRegistry struct {
@@ -23,7 +23,7 @@ func NewGolangRegistry(logger logger.Logger, baseURL string) *GolangRegistry {
 	}
 }
 
-func (r *GolangRegistry) DownloadPackage(pkg *model.NodeDependency, output string) error {
+func (r *GolangRegistry) DownloadPackage(pkg *core.NodeDependency, output string) error {
 	err := errors.New("GolangRegistry DownloadPackage not implemented")
 	r.Logger.Error(err.Error())
 	return err
@@ -37,7 +37,7 @@ func (r *GolangRegistry) GetMetadataURL(name string, version string) string {
 	return fmt.Sprintf("%s/%s/@v/%s.mod", r.BaseURL, name, version)
 }
 
-func (r *GolangRegistry) FetchPackageMetadata(pkg *model.NodeDependency) ([]byte, error) {
+func (r *GolangRegistry) FetchPackageMetadata(pkg *core.NodeDependency) ([]byte, error) {
 	url := r.GetMetadataURL(pkg.Name, pkg.Version)
 	resp, err := http.Get(url)
 	if err != nil {

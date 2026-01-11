@@ -3,19 +3,19 @@ package adapter
 import (
 	"fmt"
 
-	"github.com/mabou-dev/go-deps/pkg/config"
-	"github.com/mabou-dev/go-deps/pkg/logger"
-	"github.com/mabou-dev/go-deps/pkg/model"
-	"github.com/mabou-dev/go-deps/pkg/technology/golang"
-	"github.com/mabou-dev/go-deps/pkg/technology/npm"
+	"github.com/mabou-dev/go-deps/pkg/core"
+	"github.com/mabou-dev/go-deps/pkg/core/golang"
+	"github.com/mabou-dev/go-deps/pkg/core/npm"
+	"github.com/mabou-dev/go-deps/pkg/utils/config"
+	"github.com/mabou-dev/go-deps/pkg/utils/logger"
 )
 
 type Adapter interface {
 	CanHandle(projectPath string) bool
 	GetName() string
 
-	model.DependencyTreeBuilder
-	model.Registry
+	core.DependencyTreeBuilder
+	core.Registry
 }
 
 var registry = []Adapter{}

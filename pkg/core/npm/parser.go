@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/mabou-dev/go-deps/pkg/model"
+	"github.com/mabou-dev/go-deps/pkg/core"
 )
 
 type PackageJSON struct {
@@ -31,20 +31,20 @@ func ParsePackageJSON(path string) (*PackageJSON, error) {
 	return &pkg, nil
 }
 
-func PackageJSONToNodeDependency(pkg *PackageJSON) *model.NodeDependency {
-	root := &model.NodeDependency{
+func PackageJSONToNodeDependency(pkg *PackageJSON) *core.NodeDependency {
+	root := &core.NodeDependency{
 		Name:    pkg.Name,
 		Version: pkg.Version,
 	}
 
 	for name, version := range pkg.Dependencies {
-		root.Dependencies = append(root.Dependencies, &model.NodeDependency{
+		root.Dependencies = append(root.Dependencies, &core.NodeDependency{
 			Name:    name,
 			Version: version,
 		})
 	}
 	for name, version := range pkg.DevDependencies {
-		root.Dependencies = append(root.Dependencies, &model.NodeDependency{
+		root.Dependencies = append(root.Dependencies, &core.NodeDependency{
 			Name:    name,
 			Version: version,
 		})
@@ -83,8 +83,8 @@ func ParsePackageLockJSON(path string) (*PackageLockJSON, error) {
 	return &pkg, nil
 }
 
-func PackageLockJSONToNodeDependency(pkg *PackageLockJSON) *model.NodeDependency {
-	root := &model.NodeDependency{
+func PackageLockJSONToNodeDependency(pkg *PackageLockJSON) *core.NodeDependency {
+	root := &core.NodeDependency{
 		Name:    pkg.Name,
 		Version: pkg.Version,
 	}
@@ -97,8 +97,8 @@ func PackageLockJSONToNodeDependency(pkg *PackageLockJSON) *model.NodeDependency
 	return root
 }
 
-func lockDependencyToNodeDependency(name string, dep lockDependency) *model.NodeDependency {
-	node := &model.NodeDependency{
+func lockDependencyToNodeDependency(name string, dep lockDependency) *core.NodeDependency {
+	node := &core.NodeDependency{
 		Name:    name,
 		Version: dep.Version,
 	}

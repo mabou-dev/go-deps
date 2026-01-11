@@ -4,8 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mabou-dev/go-deps/pkg/logger"
-	"github.com/mabou-dev/go-deps/pkg/model"
+	"github.com/mabou-dev/go-deps/pkg/core"
+	"github.com/mabou-dev/go-deps/pkg/utils/logger"
 )
 
 type NpmTreeBuilder struct {
@@ -32,28 +32,28 @@ func (n *NpmTreeBuilder) GetName() string {
 	return NAME
 }
 
-func (n *NpmTreeBuilder) BuildTree(projectPath string) (*model.NodeDependency, error) {
+func (n *NpmTreeBuilder) BuildTree(projectPath string) (*core.NodeDependency, error) {
 	filename := filepath.Join(projectPath, PACKAGE_LOCK_FILE)
 	tree := n.buildTreeFromLockFile(filename)
 	return tree, nil
 }
 
-func (n *NpmTreeBuilder) buildTreeFromLockFile(filename string) *model.NodeDependency {
+func (n *NpmTreeBuilder) buildTreeFromLockFile(filename string) *core.NodeDependency {
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
 		n.Logger.Error("package-lock.json not found at path: " + filename)
-		return &model.NodeDependency{}
+		return &core.NodeDependency{}
 	}
 
 	lockJson, err := ParsePackageLockJSON(filename)
 	if err != nil {
 		n.Logger.Error("Failed to parse package-lock.json: " + err.Error())
-		return &model.NodeDependency{}
+		return &core.NodeDependency{}
 	}
 
 	tree := PackageLockJSONToNodeDependency(lockJson)
 	return tree
 }
 
-func (n *NpmTreeBuilder) DownloadPackage(pkg *model.NodeDependency, output string) error {
+func (n *NpmTreeBuilder) DownloadPackage(pkg *core.NodeDependency, output string) error {
 	return n.Registry.DownloadPackage(pkg, output)
 }

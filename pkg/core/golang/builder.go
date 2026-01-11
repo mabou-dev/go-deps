@@ -6,8 +6,8 @@ import (
 
 	"golang.org/x/mod/modfile"
 
-	"github.com/mabou-dev/go-deps/pkg/logger"
-	"github.com/mabou-dev/go-deps/pkg/model"
+	"github.com/mabou-dev/go-deps/pkg/core"
+	"github.com/mabou-dev/go-deps/pkg/utils/logger"
 )
 
 type GolangTreeBuilder struct {
@@ -35,36 +35,36 @@ func (g *GolangTreeBuilder) GetName() string {
 	return NAME
 }
 
-func (g *GolangTreeBuilder) BuildTree(projectPath string) (*model.NodeDependency, error) {
+func (g *GolangTreeBuilder) BuildTree(projectPath string) (*core.NodeDependency, error) {
 	filename := filepath.Join(projectPath, GO_MOD_FILE)
 	return g.buildTreeFromModFile(filename)
 }
 
-func (g *GolangTreeBuilder) buildTreeFromModFile(filename string) (*model.NodeDependency, error) {
+func (g *GolangTreeBuilder) buildTreeFromModFile(filename string) (*core.NodeDependency, error) {
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
 		g.Logger.Error("go.mod not found at path: " + filename)
-		return &model.NodeDependency{}, err
+		return &core.NodeDependency{}, err
 	}
 
 	data, err := os.ReadFile(filename)
 	if err != nil {
 		g.Logger.Error("Failed to read go.mod: " + err.Error())
-		return &model.NodeDependency{}, err
+		return &core.NodeDependency{}, err
 	}
 
 	modFile, err := modfile.Parse(filename, data, nil)
 	if err != nil {
 		g.Logger.Error("Failed to parse go.mod: " + err.Error())
-		return &model.NodeDependency{}, err
+		return &core.NodeDependency{}, err
 	}
 
-	root := &model.NodeDependency{
+	root := &core.NodeDependency{
 		Name:    modFile.Module.Mod.Path,
 		Version: "", // Go modules do not have a version in go.mod
 	}
 
 	for _, req := range modFile.Require {
-		dep := &model.NodeDependency{
+		dep := &core.NodeDependency{
 			Name:    req.Mod.Path,
 			Version: req.Mod.Version,
 		}
@@ -74,10 +74,10 @@ func (g *GolangTreeBuilder) buildTreeFromModFile(filename string) (*model.NodeDe
 	return root, nil
 }
 
-func (g *GolangTreeBuilder) resolvePackage(depName, depVersion string) (*model.NodeDependency, error) {
+func (g *GolangTreeBuilder) resolvePackage(depName, depVersion string) (*core.NodeDependency, error) {
 	url := g.Registry.GetPackageURL(depName, depVersion)
 
-	node := &model.NodeDependency{
+	node := &core.NodeDependency{
 		Name:    depName,
 		Version: depVersion,
 		URLs:    []string{url},
@@ -106,6 +106,6 @@ func (g *GolangTreeBuilder) resolvePackage(depName, depVersion string) (*model.N
 	return node, nil
 }
 
-func (g *GolangTreeBuilder) DownloadPackage(pkg *model.NodeDependency, output string) error {
+func (g *GolangTreeBuilder) DownloadPackage(pkg *core.NodeDependency, output string) error {
 	return g.Registry.DownloadPackage(pkg, output)
 }

@@ -7,8 +7,8 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"github.com/mabou-dev/go-deps/pkg/technology/golang"
-	"github.com/mabou-dev/go-deps/pkg/technology/npm"
+	"github.com/mabou-dev/go-deps/pkg/core/golang"
+	"github.com/mabou-dev/go-deps/pkg/core/npm"
 )
 
 // Config holds the application configuration

@@ -3,8 +3,8 @@ package npm
 import (
 	"errors"
 
-	"github.com/mabou-dev/go-deps/pkg/logger"
-	"github.com/mabou-dev/go-deps/pkg/model"
+	"github.com/mabou-dev/go-deps/pkg/core"
+	"github.com/mabou-dev/go-deps/pkg/utils/logger"
 )
 
 type NpmRegistry struct {
@@ -20,7 +20,7 @@ func NewNpmRegistry(logger logger.Logger, baseURL string) *NpmRegistry {
 	}
 }
 
-func (r *NpmRegistry) DownloadPackage(pkg *model.NodeDependency, output string) error {
+func (r *NpmRegistry) DownloadPackage(pkg *core.NodeDependency, output string) error {
 	err := errors.New("NpmRegistry DownloadPackage not implemented")
 	r.Logger.Error(err.Error())
 	return err
