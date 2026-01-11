@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 // Logger defines a minimal logging interface independent of any implementation
@@ -20,18 +19,18 @@ type zapLoggerAdapter struct {
 }
 
 // NewLogger creates and returns a new Logger instance backed by Zap
-func NewLogger(debug bool) Logger {
+func NewLogger(cfg *zap.Config, debug bool) Logger {
 	var config zap.Config
 
-	if debug {
-		config = zap.NewDevelopmentConfig()
-		config.Level = zap.NewAtomicLevelAt(zapcore.DebugLevel)
+	if cfg != nil {
+		config = *cfg
 	} else {
 		config = zap.NewProductionConfig()
-		config.Level = zap.NewAtomicLevelAt(zapcore.InfoLevel)
 	}
 
-	config.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout("20060102T150405")
+	if debug {
+		config.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+	}
 
 	zapLogger, err := config.Build()
 	if err != nil {

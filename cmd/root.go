@@ -34,7 +34,7 @@ It helps you track and manage project dependencies efficiently`,
 				fmt.Fprintln(os.Stderr, "Error loading config:", err)
 				os.Exit(1)
 			}
-			log = logger.NewLogger(cfg.App.Debug)
+			log = logger.NewLogger(&cfg.App.Logger, cfg.App.Debug)
 			adapter.Init(log, cfg.Technical)
 		},
 	}

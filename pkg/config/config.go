@@ -4,7 +4,10 @@ import (
 	"fmt"
 
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 
+	"github.com/mabou-dev/go-deps/pkg/technology/golang"
 	"github.com/mabou-dev/go-deps/pkg/technology/npm"
 )
 
@@ -16,8 +19,9 @@ type Config struct {
 
 // AppConfig holds application-specific settings
 type AppConfig struct {
-	Name  string `mapstructure:"name"`
-	Debug bool   `mapstructure:"debug"`
+	Name   string     `mapstructure:"name"`
+	Debug  bool       `mapstructure:"debug"`
+	Logger zap.Config `mapstructure:"logger"`
 }
 
 type TechnicalConfig struct {
@@ -31,12 +35,44 @@ func DefaultConfig() *Config {
 		App: AppConfig{
 			Name:  "go-deps",
 			Debug: false,
+			Logger: zap.Config{
+				Level:       zap.NewAtomicLevelAt(zap.InfoLevel),
+				Development: false,
+				Encoding:    "json",
+				EncoderConfig: zapcore.EncoderConfig{
+					TimeKey:        "timestamp",
+					LevelKey:       "level",
+					NameKey:        "logger",
+					CallerKey:      "caller",
+					MessageKey:     "msg",
+					StacktraceKey:  "stacktrace",
+					LineEnding:     zapcore.DefaultLineEnding,
+					EncodeLevel:    zapcore.LowercaseLevelEncoder,
+					EncodeTime:     zapcore.ISO8601TimeEncoder,
+					EncodeDuration: zapcore.StringDurationEncoder,
+					EncodeCaller:   zapcore.ShortCallerEncoder,
+				},
+				OutputPaths:      []string{"stdout"},
+				ErrorOutputPaths: []string{"stderr"},
+			},
 		},
 		Technical: map[string]TechnicalConfig{
 			npm.NAME: {
 				Enabled:     true,
 				RegistryURL: "https://registry.npmjs.org/",
 			},
+			golang.NAME: {
+				Enabled:     true,
+				RegistryURL: "https://proxy.golang.org/",
+			},
+			//sbt.NAME: {
+			//	Enabled:     true,
+			//	RegistryURL: "https://repo1.maven.org/maven2/",
+			//},
+			//python.NAME: {
+			//	Enabled:     true,
+			//	RegistryURL: "https://pypi.org/simple",
+			//},
 			// Add other technologies with their default configs here
 		},
 	}
