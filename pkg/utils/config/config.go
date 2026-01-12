@@ -80,19 +80,20 @@ func DefaultConfig() *Config {
 
 // LoadConfig loads the configuration from a JSON file with fallback to defaults
 func LoadConfig() (*Config, error) {
+	config := DefaultConfig()
 	// Try to read config file
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			// Config file not found, return default config
-			return DefaultConfig(), nil
+			return config, nil
 		}
 		return nil, fmt.Errorf("failed to read config file: %w", err)
 	}
 
-	var config Config
+	// Unmarshal config into struct, orverride defaults
 	if err := viper.Unmarshal(&config); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
 	}
 
-	return &config, nil
+	return config, nil
 }
